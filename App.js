@@ -68,7 +68,6 @@ function NotepadList(){
   useEffect(() => {
     retrieveAllNotes()
   }, [])
-
   retrieveAllNotes()
   return (
     <View style={{padding: 15}}>
@@ -86,7 +85,6 @@ function NotepadList(){
   )
 }
 
-
 const retrieveNote = async (key) => {
   try {
     const value = await AsyncStorage.getItem(key)
@@ -103,79 +101,6 @@ const saveNote = async (key, value) => {
     console.log(error)
   }
 }
-/*
-function notepad(){
-  const [text, setText] = useState("");
-  
-  const handleSave = () => {
-    saveNote('tempNote', text)
-  };
-
-  const handleReturn = () => {
-    returnButton()
-  };
-
-  return (
-    <View style={notepadStyles.container}>
-      <TouchableOpacity style={notepadStyles.returnButtonContainer}>
-        <Button
-          style={notepadStyles.returnButton}
-          title="< Return"
-          onPress={handleReturn}
-        />
-      </TouchableOpacity>
-      <TextInput 
-      style={notepadStyles.textInput} 
-      placeholder="Enter text..."
-      multiline
-      onChangeText={setText}>
-        {}
-      </TextInput>
-      <View
-      style={notepadStyles.saveButton}>
-        <Button
-          title='Save'
-          onPress={handleSave}/>
-      </View>
-      
-    </View>
-  );
-}
-
-function notepadList(){
-  const [keys, setKeys] = useState([]);
-  const handlePress = async (key) => {
-    const value = await AsyncStorage.getItem(key);
-    console.log('key pressed: ' + value)
-  }
-  const retrieveAllNotes = async () => {
-    try {
-      const keys = await AsyncStorage.getAllKeys()
-      setKeys(keys)
-    } catch ( error ) {
-      console.log(error)
-    }
-  };
-  useEffect(() => {
-    retrieveAllNotes()
-  }, []);
-
-  const keyList = keys.map(key => {
-    return (
-      <TouchableOpacity key={key} onPress={() => handlePress(key)}>
-        <Text>{key}</Text>
-      </TouchableOpacity>
-    )
-  })
-  
-  return (
-    <View style={notepadListStyles.container}>
-      <Text>Notepad List</Text>
-      {keyList}
-    </View>
-  )
-}
-*/
 
 const styles = StyleSheet.create({
   container: {
