@@ -8,16 +8,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
 
-function Test(){
-  console.log('home screen')
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Home Screen</Text>
-    </View>
-  )
-    
-}
-
 function HomeScreen() {
   const navigation = useNavigation()
   return (
@@ -36,19 +26,66 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Test" component={Test}/>
+        <Stack.Screen name="Notepad List" component={NotepadList}/>
+        <Stack.Screen name="Notepad" component={Notepad}/>
       </Stack.Navigator>
     </NavigationContainer>
   )
 }
-
-/*
-const returnButton = () => {
-  console.log('returning')
-  menu = true
-  console.log('menu: ' + menu)
+let currentNotepad = ""
+function setNotepad(name){
+  currentNotepad = name
 }
+
+function Notepad(){
+  console.log('current notepad: ' + currentNotepad)
+  return (
+    <View style={{padding: 25}}>
+      <TextInput style={{fontSize: 25}} multiline>
+        <Text>{currentNotepad}</Text>
+      </TextInput>
+    </View>
+  )
+}
+
+function NotepadList(){
+  const [notepads, setNotepads] = useState([])
+  const navigation = useNavigation()
+  const buttonHandler = (name) => {
+    navigation.navigate('Notepad', { title: name })
+    setNotepad(name)
+  }
+
+  const retrieveAllNotes = async () => {
+    try {
+      const keys = await AsyncStorage.getAllKeys()
+      const values = await AsyncStorage.multiGet(keys)
+      setNotepads(values)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    retrieveAllNotes()
+  }, [])
+
+  retrieveAllNotes()
+  return (
+    <View style={{padding: 15}}>
+      {notepads.map(notepad => (
+        <View key={notepad[0]} >
+          <TouchableOpacity
+          onPress={() => buttonHandler(notepad[1])}>
+            <Text style={{fontSize: 25, paddingTop: 11}}>
+              {notepad[0]}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ))}
+    </View>
+  )
+}
+
 
 const retrieveNote = async (key) => {
   try {
@@ -66,7 +103,7 @@ const saveNote = async (key, value) => {
     console.log(error)
   }
 }
-
+/*
 function notepad(){
   const [text, setText] = useState("");
   
