@@ -3,8 +3,47 @@ import { StyleSheet, Text, View } from 'react-native';
 import { TextInput, TouchableOpacity, Button } from 'react-native';
 import { AsyncStorage } from 'react-native'
 import React, { useState, useEffect } from 'react'
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 
 
+function Test(){
+  console.log('home screen')
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>Home Screen</Text>
+    </View>
+  )
+    
+}
+
+function HomeScreen() {
+  const navigation = useNavigation()
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>Home Screen</Text>
+      <Button
+      title='test'
+      onPress={() => navigation.navigate('Test')}/>
+    </View>
+  )
+}
+
+const Stack = createNativeStackNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Test" component={Test}/>
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
+}
+
+/*
 const returnButton = () => {
   console.log('returning')
   menu = true
@@ -99,15 +138,7 @@ function notepadList(){
     </View>
   )
 }
-
-export default function App() {
-  const menu = false
-  if(menu){
-    return notepadList()
-  } else {
-    return notepad()
-  }
-}
+*/
 
 const styles = StyleSheet.create({
   container: {
