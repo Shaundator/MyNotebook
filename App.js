@@ -6,109 +6,13 @@ import React, { useState, useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-
+// Newer ones
+import Index from "./src/Index"
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Notepad List" component={NotepadList}/>
-        <Stack.Screen name="Notepad" component={Notepad} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
-
-function Notepad({ route }){
-  const { name, value } = route.params
-  const [text, setText] = useState(value)
-  saveNote(name, text)
-  return (
-    <View style={{padding: 25}}>
-      <TextInput 
-      style={{fontSize: 25}} 
-      multiline
-      onChangeText={setText}>
-        <Text>{value}</Text>
-      </TextInput>
-    </View>
-  )
-}
-
-
-
-function NotepadList(){
-  const navigation = useNavigation();
-  const [notepads, setNotepads] = useState([]);
-  const [newNoteName, setNewNoteName] = useState("");
-
-  const button_openNotepad = (name, value) => {
-    navigation.navigate("Notepad", { name: name, value: value });
-  };
-
-  const button_createNewNotepad = (name) => {
-    createNewNotepad(name, notepads)
-  };
-
-
-  useEffect(() => {
-    retrieveAllNotes().then((values) => {
-      setNotepads(values);
-    });
-  });
-
-  return (
-    <View 
-    style={{ flex: 1, padding: 15 }}
-    >
-      {notepads.map((notepad) => (
-        <View key={notepad[0]}>
-          <TouchableOpacity
-            onPress={() => button_openNotepad(notepad[0], notepad[1])}
-          >
-            <Text style={{ fontSize: 25, paddingTop: 11 }}>{notepad[0]}</Text>
-          </TouchableOpacity>
-        </View>
-      ))}
-      <Text>
-        <Text style={{ fontSize: 25 }}>Create New Note</Text>
-      </Text>
-        <TextInput placeholder="name" onChangeText={setNewNoteName} />
-      <Button 
-      title="+" 
-      onPress={() => button_createNewNotepad(newNoteName)} />
-    </View>
-  );
-}
-
-
-const retrieveAllNotes = async () => {
-  try {
-    const keys = await AsyncStorage.getAllKeys()
-    const values = await AsyncStorage.multiGet(keys)
-    return values
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-const saveNote = async (key, value) => {
-  try {
-    await AsyncStorage.setItem(key, value)
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-function createNewNotepad(name, notepads){
-  const foundNotes = notepads.filter((note) => note[0] === name);
-    if (foundNotes.length == 0) {
-      console.log("Saving new notepad");
-      saveNote(name, "");
-    } else {
-      alert("A note already exists with this name");
-  }
+  console.log('testing start22')
+  return Index()
 }
 
 const styles = StyleSheet.create({
