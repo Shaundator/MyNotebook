@@ -7,82 +7,105 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
-
-function HomeScreen() {
-  const navigation = useNavigation()
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Home Screen</Text>
-      <Button
-      title='test'
-      onPress={() => navigation.navigate('Test')}/>
-    </View>
-  )
-}
-
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Notepad List" component={NotepadList}/>
-        <Stack.Screen name="Notepad" component={Notepad}/>
+        <Stack.Screen
+          name="Notepad List"
+          component={NotepadList}
+          options={{
+            headerRight: (navigation) => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("NewNotepad")}
+              >
+                <Text style={{ fontSize: 20 }}>+</Text>
+              </TouchableOpacity>
+            ),
+          }}
+        />
+        <Stack.Screen name="Notepad" component={Notepad} />
       </Stack.Navigator>
     </NavigationContainer>
-  )
-}
-let currentNotepad = ""
-function setNotepad(name){
-  currentNotepad = name
+  );
 }
 
-function Notepad(){
-  console.log('current notepad: ' + currentNotepad)
+// Works
+function Notepad({ route }){
+  const { name, value } = route.params
+  const [text, setText] = useState(value)
+  saveNote(name, text)
   return (
     <View style={{padding: 25}}>
-      <TextInput style={{fontSize: 25}} multiline>
-        <Text>{currentNotepad}</Text>
+      <TextInput 
+      style={{fontSize: 25}} 
+      multiline
+      onChangeText={setText}>
+        <Text>{value}</Text>
       </TextInput>
     </View>
   )
 }
 
+
+
 function NotepadList(){
   const [notepads, setNotepads] = useState([])
+  const [newNoteName, setNewNoteName] = useState("")
   const navigation = useNavigation()
-  const buttonHandler = (name) => {
-    navigation.navigate('Notepad', { title: name })
-    setNotepad(name)
+  const buttonHandler = (name, value) => {
+    navigation.navigate('Notepad', { name: name, value: value })
   }
-
-  const retrieveAllNotes = async () => {
-    try {
-      const keys = await AsyncStorage.getAllKeys()
-      const values = await AsyncStorage.multiGet(keys)
-      setNotepads(values)
-    } catch (error) {
-      console.log(error)
+  const buttonHandler2 = (name) => {
+    const foundNotes = notepads.filter(note => note[0] === newNoteName);
+    if(foundNotes.length == 0) {
+      console.log('Saving new notepad')
+      saveNote(name, "")
+    } else {
+      alert('A note already exists with this name')
     }
   }
+  
   useEffect(() => {
-    retrieveAllNotes()
-  }, [])
-  retrieveAllNotes()
+    retrieveAllNotes().then(values => {
+      setNotepads(values)
+    })
+  })
+
   return (
-    <View style={{padding: 15}}>
+    <View style={{flex: 1, padding: 15}}>
       {notepads.map(notepad => (
         <View key={notepad[0]} >
           <TouchableOpacity
-          onPress={() => buttonHandler(notepad[1])}>
+          onPress={() => buttonHandler(notepad[0], notepad[1])}>
             <Text style={{fontSize: 25, paddingTop: 11}}>
               {notepad[0]}
             </Text>
           </TouchableOpacity>
         </View>
       ))}
+      <Text>
+        <Text style={{fontSize: 25}}>Create New Note</Text>
+      </Text>
+      <TextInput placeholder='name' onChangeText={setNewNoteName}/>
+      <Button
+      title='+'
+      onPress={() => buttonHandler2(newNoteName)}/>
     </View>
   )
+}
+
+
+const retrieveAllNotes = async () => {
+  try {
+    const keys = await AsyncStorage.getAllKeys()
+    const values = await AsyncStorage.multiGet(keys)
+    return values
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const retrieveNote = async (key) => {
@@ -142,3 +165,11 @@ const notepadListStyles = StyleSheet.create({
   notepadList: {},
   searchField: {}
 })
+
+
+// insert function here
+  /*
+  useEffect(() => {
+    retrieveAllNotes()
+  }, [])
+  */
