@@ -1,7 +1,6 @@
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { Text, View, StyleSheet, TextInput, Button } from 'react-native';
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
-
 
 import SaveNote from '../utilities/SaveNote'
 import DeleteNote from '../utilities/DeleteNote'
@@ -19,8 +18,11 @@ export default function Notepad({ route }){
     SaveNote(name, text)
     return (
       <View style={{padding: 25}}>
+        <View style={NotepadStyles.name}>
+          <Text style={NotepadStyles.nameText}>{name}</Text>
+        </View>
         <TextInput 
-        style={{fontSize: 25}} 
+        style={{fontSize: 25, marginTop: 25}} 
         multiline
         onChangeText={setText}>
           <Text>{value}</Text>
@@ -35,3 +37,16 @@ export default function Notepad({ route }){
     )
   }
   
+  const NotepadStyles = StyleSheet.create({
+    container: {},
+    name: {
+      borderRadius: 15,
+      padding: 15,
+      alignItems: 'center',
+      backgroundColor: 'lightgrey'
+    },
+    nameText: {
+      fontSize: 25
+
+    }
+  })
