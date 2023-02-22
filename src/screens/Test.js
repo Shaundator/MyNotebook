@@ -24,6 +24,7 @@ async function signUp(email, password) {
     }
   }
 */
+
 import { getAuth, signInAnonymously } from "firebase/auth";
 
 const auth = getAuth();
@@ -35,7 +36,7 @@ signInAnonymously(auth)
     const errorCode = error.code;
     const errorMessage = error.message;
     // ...
-  });
+});
 
 export default function Test(){
     const noteColl = "notes"
