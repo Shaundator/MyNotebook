@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { Text, View, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, SafeAreaView, Button } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react'
 
@@ -8,11 +8,16 @@ import CreateAndValidateNewNote from "../utilities/CreateAndValidateNewNote"
 
 
 
+  
 export default function NotepadList(){
     const navigation = useNavigation();
     const [notepads, setNotepads] = useState([]);
     const [newNoteName, setNewNoteName] = useState("");
   
+    const button_test = () =>  {
+      console.log('test button clicked')
+      navigation.navigate('Test')
+    }
     const button_openNotepad = (name, value) => {
       navigation.navigate("Notepad", { name: name, value: value });
     };
@@ -24,6 +29,7 @@ export default function NotepadList(){
   
   
     useEffect(() => {
+      // Is this meant to keep using?
       RetrieveAllNotes().then((values) => {
         setNotepads(values);
       });
@@ -31,6 +37,10 @@ export default function NotepadList(){
   
     return (
       <SafeAreaView style={NotepadListStyles.container}>
+        <Button
+        title='Test Button'
+        onPress={button_test}
+        />
         <ScrollView style={NotepadListStyles.scrollView}>
           {notepads.map((notepad) => (
             <View key={notepad[0]}>
